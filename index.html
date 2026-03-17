@@ -27,7 +27,7 @@
             position: relative;
             width: 100%;
             padding-top: 100%;
-            background-color: #fce7f3; /* สีชมพูอ่อนมากเป็นพื้นหลังระหว่างรอโหลด */
+            background-color: #fce7f3;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -42,10 +42,9 @@
             height: 100%;
             object-fit: cover;
             transition: opacity 0.5s ease-in-out;
-            opacity: 0; /* เริ่มต้นที่ 0 เพื่อทำ Fade-in */
+            opacity: 0;
         }
 
-        /* สำหรับภาพที่เป็น Placeholder ให้ดูเล็กลงและจางลง */
         .is-placeholder {
             width: 30% !important;
             height: 30% !important;
@@ -77,46 +76,58 @@
             background-size: 1em;
         }
 
-        #backToTop {
-            transition: all 0.3s ease;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(20px);
-        }
-        #backToTop.show {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateY(0);
-        }
-
+        /* Animation ย่อขนาด Search Container */
         #searchContainer {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         #searchContainer.scrolled {
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-            max-width: 92%;
+            padding: 0.75rem 1.5rem;
+            max-width: 600px;
             margin-left: auto;
             margin-right: auto;
             border-radius: 999px;
-            box-shadow: 0 10px 15px -3px rgba(249, 96, 150, 0.2);
+            box-shadow: 0 15px 30px -5px rgba(249, 96, 150, 0.25);
+            border-color: rgba(249, 96, 150, 0.3);
         }
 
-        @media (max-width: 767px) {
+        /* ซ่อน Category และ Sort ใน Mobile เมื่อเลื่อนลง */
+        @media (max-width: 768px) {
+            #searchContainer.scrolled #categoryFilters,
             #searchContainer.scrolled #sortWrapper {
                 display: none;
             }
+            #searchContainer.scrolled .search-inner-flex {
+                flex-direction: row;
+            }
+            #searchContainer.scrolled input {
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+                font-size: 0.875rem;
+            }
         }
 
-        #searchContainer.scrolled #categoryFilters {
-            display: none;
+        /* Back to Top Button */
+        #backToTop {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 40;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        #backToTop.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
         }
     </style>
 </head>
 <body class="min-h-screen pb-24">
 
-    <!-- Header Section (Optimized Logo) -->
+    <!-- Header Section -->
     <header id="mainHeader" class="bg-[#F96096] text-white py-10 md:py-14 px-4 shadow-xl mb-6 relative overflow-hidden">
         <div class="absolute inset-0 opacity-10">
             <svg class="h-full w-full" fill="currentColor" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -125,7 +136,6 @@
         </div>
         <div class="max-w-6xl mx-auto text-center relative z-10">
             <div class="flex justify-center mb-6">
-                <!-- ใช้การกำหนดขนาดรูปภาพจากต้นทางถ้าทำได้เพื่อประหยัดดาต้า -->
                 <img src="https://cdn.shopify.com/s/files/1/0839/1278/6208/files/offi.png?v=1773728815&width=300" 
                      alt="Ploypaw Official Logo" 
                      class="h-24 md:h-36 object-contain filter drop-shadow-lg"
@@ -140,6 +150,7 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 md:px-6">
+        <!-- Search & Category Bar -->
         <div id="searchContainer" class="glass sticky top-4 z-30 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-lg mb-8 flex flex-col gap-4 border border-pink-100">
             <div class="flex flex-col md:flex-row gap-4 search-inner-flex">
                 <div class="relative flex-grow">
@@ -167,7 +178,12 @@
         <div id="emptyState" class="hidden text-center py-20"><p class="text-pink-300 text-xl font-medium">ไม่พบสินค้าที่คุณค้นหา</p></div>
     </main>
 
-    <!-- Modal Options (ใช้ Lazy Load Image เช่นกัน) -->
+    <!-- Back to Top Button -->
+    <button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="bg-pink-500 text-white p-3 rounded-full shadow-2xl hover:bg-pink-600 active:scale-90 transition-all">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+    </button>
+
+    <!-- Modal Options -->
     <div id="optionsModal" class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none modal-overlay bg-black/60 p-4">
         <div class="bg-white w-full max-w-md rounded-[2rem] overflow-hidden flex flex-col max-h-[80vh] shadow-2xl modal-content transform scale-90">
             <div class="p-6 bg-pink-500 text-white flex justify-between items-center">
@@ -185,13 +201,23 @@
         let groupedProducts = []; 
         let currentCategory = 'All';
 
-        // SVG Placeholder ขนาดจิ๋ว (ประหยัดอินเทอร์เน็ต)
         const placeholderImg = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRjk2MDk2IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTIwLjIgNmwtNy4xIDcuMWEyLjgyIDIuODIgMCAwIDEtNCAwbC03LjEtNy4xTTIgMTJWNmEyIDIgMCAwIDEgMi0yaDE2YTIgMiAwIDAgMSAyIDJ2MTJhMiAyIDAgMCAxLTIgMkg0YTIgMiAwIDAgMS0yLTJ2LTZ6Ii8+PC9zdmc+";
 
+        // Scroll Event Listener สำหรับ UI ย่อส่วน
         window.addEventListener('scroll', () => {
             const searchContainer = document.getElementById('searchContainer');
             const header = document.getElementById('mainHeader');
-            if (window.scrollY > header.offsetHeight) {
+            const backToTop = document.getElementById('backToTop');
+            
+            // ปัดปุ่ม Back to Top
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+
+            // ย่อ Search Bar
+            if (window.scrollY > header.offsetHeight - 50) {
                 searchContainer.classList.add('scrolled');
             } else {
                 searchContainer.classList.remove('scrolled');
@@ -260,9 +286,7 @@
             el.style.opacity = "1";
         }
 
-        function handleImgLoad(el) {
-            el.style.opacity = "1";
-        }
+        function handleImgLoad(el) { el.style.opacity = "1"; }
 
         function updateGrid() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
@@ -273,7 +297,6 @@
                 (currentCategory === 'All' || p.Category === currentCategory)
             );
 
-            // Sorting logic...
             if (sortBy === 'name') filtered.sort((a, b) => a.ItemName.localeCompare(b.ItemName, 'th'));
             else if (sortBy === 'priceLow') filtered.sort((a, b) => parseFloat(a.WholesalePrice || 0) - parseFloat(b.WholesalePrice || 0));
             else if (sortBy === 'priceHigh') filtered.sort((a, b) => parseFloat(b.WholesalePrice || 0) - parseFloat(a.WholesalePrice || 0));
@@ -287,7 +310,6 @@
             } else {
                 empty.classList.add('hidden');
                 grid.innerHTML = filtered.map((item, index) => {
-                    // ปรับแต่ง URL รูปภาพเพื่อขอขนาดที่เล็กลง (ถ้า CDN รองรับ)
                     let displaySrc = (item.ImageURL && item.ImageURL.length > 10) ? item.ImageURL : placeholderImg;
                     if (displaySrc.includes('cdn.shopify.com')) {
                         displaySrc += displaySrc.includes('?') ? '&width=400' : '?width=400';
@@ -314,12 +336,46 @@
                             <h3 class="text-sm md:text-base font-medium text-gray-800 line-clamp-1 h-5 md:h-6 leading-tight">${item.ItemName}</h3>
                             <p class="text-[10px] text-gray-400 font-light line-clamp-2 h-7 md:h-8 mb-2 italic">${item.Description || '-'}</p>
                             
-                            <div class="bulk-badge p-2 md:p-3 rounded-[1.2rem] text-white mt-auto text-center">
-                                <div class="flex items-baseline justify-center gap-1">
-                                    <span class="text-lg md:text-2xl font-bold">฿${item.WholesalePrice || '0'}</span>
-                                    <span class="text-[8px]">/ ${item.WholesaleUnit || 'หน่วย'}</span>
+                            <div class="bulk-badge p-2 md:p-3 rounded-[1.2rem] text-white mt-auto text-center flex flex-col gap-1.5">
+                                <div class="flex flex-col items-center">
+                                    <span class="text-[8px] opacity-90 font-light leading-none mb-1 uppercase tracking-tighter">ราคาส่ง (ขั้นต่ำ ${item.MinWholesaleQty || '1'} ${item.WholesaleUnit || ''})</span>
+                                    <div class="flex items-baseline gap-1">
+                                        <span class="text-lg md:text-2xl font-bold">฿${item.WholesalePrice || '0'}</span>
+                                        <span class="text-[8px]">/ ${item.WholesaleUnit || ''}</span>
+                                    </div>
                                 </div>
-                                <button onclick="showOptionsByIndex(${index}, filteredDataRef)" class="w-full bg-white text-pink-500 mt-2 py-1.5 rounded-full text-[10px] font-bold shadow-sm">ดูตัวเลือก</button>
+                                
+                                ${ (item.BulkPrice && item.BulkPrice !== '0' && item.BulkPrice !== item.WholesalePrice) ? `
+                                <div class="pt-1.5 border-t border-white/20 flex flex-col items-center">
+                                    <span class="text-[8px] font-light opacity-90 leading-none mb-1 italic tracking-tighter">Step 2: สั่ง ${item.BulkQty || '0'} ${item.WholesaleUnit || ''} ขึ้นไป</span>
+                                    <div class="flex items-baseline gap-1">
+                                        <span class="text-sm md:text-xl font-bold">฿${item.BulkPrice}</span>
+                                        <span class="text-[7px]">/ ${item.WholesaleUnit || ''}</span>
+                                    </div>
+                                </div>
+                                ` : ''}
+
+                                ${ (item.BulkPrice2 && item.BulkPrice2 !== '0') ? `
+                                <div class="pt-1.5 border-t border-white/10 flex flex-col items-center">
+                                    <span class="text-[8px] font-light opacity-90 leading-none mb-1 italic tracking-tighter">Step 3: สั่ง ${item.BulkQty2 || '0'} ${item.WholesaleUnit || ''} ขึ้นไป</span>
+                                    <div class="flex items-baseline gap-1">
+                                        <span class="text-sm md:text-xl font-bold text-yellow-200">฿${item.BulkPrice2}</span>
+                                        <span class="text-[7px]">/ ${item.WholesaleUnit || ''}</span>
+                                    </div>
+                                </div>
+                                ` : ''}
+
+                                ${ (item.BulkPrice3 && item.BulkPrice3 !== '0') ? `
+                                <div class="pt-1.5 border-t border-white/10 flex flex-col items-center">
+                                    <span class="text-[8px] font-bold text-yellow-300 leading-none mb-1 italic tracking-tighter">VIP: สั่ง ${item.BulkQty3 || '0'} ${item.WholesaleUnit || ''} ขึ้นไป</span>
+                                    <div class="flex items-baseline gap-1">
+                                        <span class="text-sm md:text-xl font-black text-yellow-300">฿${item.BulkPrice3}</span>
+                                        <span class="text-[7px]">/ ${item.WholesaleUnit || ''}</span>
+                                    </div>
+                                </div>
+                                ` : ''}
+
+                                <button onclick="showOptionsByIndex(${index}, filteredDataRef)" class="w-full bg-white text-pink-500 mt-1 py-1.5 rounded-full text-[10px] font-bold shadow-sm active:scale-95 transition-transform">ดูตัวเลือก</button>
                             </div>
                         </div>
                     </div>`;
@@ -340,7 +396,7 @@
                 </div>
                 <div class="flex-grow">
                     <h4 class="font-medium text-gray-800 text-sm leading-tight">${item.ItemName}</h4>
-                    <p class="text-pink-500 font-bold text-lg">฿${item.WholesalePrice || '0'}</p>
+                    <p class="text-pink-500 font-bold text-lg">เริ่มต้น ฿${item.WholesalePrice || '0'}</p>
                 </div>
             `;
 
@@ -348,7 +404,7 @@
                 const parts = opt.split(':');
                 return `
                 <div class="flex items-center justify-between p-3 bg-white border border-pink-100 rounded-2xl">
-                    <span class="text-gray-700 text-sm">${parts[0]}</span>
+                    <span class="text-gray-700 text-sm font-light">${parts[0]}</span>
                     <span class="text-pink-600 font-bold text-sm">฿${parts[1] || item.WholesalePrice}</span>
                 </div>`;
             }).join('');
