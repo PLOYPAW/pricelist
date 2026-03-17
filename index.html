@@ -75,19 +75,58 @@
             background-position: right 1rem center;
             background-size: 1em;
         }
+
+        /* ปุ่มกลับด้านบน */
+        #backToTop {
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+        }
+        #backToTop.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        /* อนิเมชั่นย่อส่วน Search Bar */
+        #searchContainer {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #searchContainer.scrolled {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 999px;
+            box-shadow: 0 10px 15px -3px rgba(249, 96, 150, 0.2);
+        }
+        #searchContainer.scrolled input {
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+        #searchContainer.scrolled #sortBy {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        #searchContainer.scrolled #categoryFilters {
+            display: none; /* ซ่อนหมวดหมู่เมื่อเลื่อนลงเพื่อประหยัดพื้นที่ */
+        }
     </style>
 </head>
 <body class="min-h-screen pb-24">
 
-    <!-- Header Section: ปรับปรุงเป็นโลโก้ใหม่จาก Shopify CDN -->
-    <header class="bg-[#F96096] text-white py-10 md:py-14 px-4 shadow-xl mb-6 relative overflow-hidden">
+    <!-- Header Section -->
+    <header id="mainHeader" class="bg-[#F96096] text-white py-10 md:py-14 px-4 shadow-xl mb-6 relative overflow-hidden">
         <div class="absolute inset-0 opacity-10">
             <svg class="h-full w-full" fill="currentColor" viewBox="0 0 100 100" preserveAspectRatio="none">
                 <path d="M0 100 Q 50 0 100 100 Z" />
             </svg>
         </div>
         <div class="max-w-6xl mx-auto text-center relative z-10">
-            <!-- แสดงโลโก้ใหม่ -->
             <div class="flex justify-center mb-6">
                 <img src="https://cdn.shopify.com/s/files/1/0839/1278/6208/files/offi.png?v=1773728815" 
                      alt="Ploypaw Official Logo" 
@@ -102,7 +141,8 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 md:px-6">
-        <div class="glass sticky top-2 z-30 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-lg mb-8 flex flex-col gap-4 border border-pink-100">
+        <!-- Search & Filter Area with Shrink Animation -->
+        <div id="searchContainer" class="glass sticky top-4 z-30 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-lg mb-8 flex flex-col gap-4 border border-pink-100">
             <div class="flex flex-col md:flex-row gap-4">
                 <div class="relative flex-grow">
                     <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-pink-400">
@@ -129,6 +169,11 @@
         <div id="emptyState" class="hidden text-center py-20"><p class="text-pink-300 text-xl font-medium">ไม่พบสินค้าที่คุณค้นหา</p></div>
     </main>
 
+    <!-- ปุ่มกลับด้านบน -->
+    <button id="backToTop" onclick="scrollToTop()" class="fixed bottom-6 right-6 z-40 bg-pink-500 text-white p-3 rounded-full shadow-2xl hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 15l7-7 7 7"></path></svg>
+    </button>
+
     <div id="optionsModal" class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none modal-overlay bg-black/60 p-4">
         <div class="bg-white w-full max-w-md rounded-[2rem] overflow-hidden flex flex-col max-h-[80vh] shadow-2xl modal-content transform scale-90">
             <div class="p-6 bg-pink-500 text-white flex justify-between items-center">
@@ -150,6 +195,32 @@
         let currentCategory = 'All';
 
         const placeholderImg = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRjk2MDk2IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTIwLjIgNmwtNy4xIDcuMWEyLjgyIDIuODIgMCAwIDEtNCAwbC03LjEtNy4xTTIgMTJWNmEyIDIgMCAwIDEgMi0yaDE2YTIgMiAwIDAgMSAyIDJ2MTJhMiAyIDAgMCAxLTIgMkg0YTIgMiAwIDAgMS0yLTJ2LTZ6Ii8+PC9zdmc+";
+
+        // ฟังก์ชันจัดการการเลื่อนหน้าจอ
+        window.addEventListener('scroll', () => {
+            const backToTopBtn = document.getElementById('backToTop');
+            const searchContainer = document.getElementById('searchContainer');
+            const header = document.getElementById('mainHeader');
+            const scrollThreshold = header.offsetHeight;
+
+            // ปุ่มกลับด้านบน
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+
+            // ย่อขนาด Search Container
+            if (window.scrollY > scrollThreshold) {
+                searchContainer.classList.add('scrolled');
+            } else {
+                searchContainer.classList.remove('scrolled');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         async function fetchData() {
             try {
