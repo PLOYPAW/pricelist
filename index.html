@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ploypaw Pet Shop - Product Catalog</title>
+    <title>Ploypaw - Product Catalog</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -97,23 +97,30 @@
             padding-top: 0.5rem;
             padding-bottom: 0.5rem;
             margin-bottom: 1rem;
-            max-width: 90%;
+            max-width: 92%;
             margin-left: auto;
             margin-right: auto;
             border-radius: 999px;
             box-shadow: 0 10px 15px -3px rgba(249, 96, 150, 0.2);
         }
         #searchContainer.scrolled input {
-            padding-top: 0.75rem;
-            padding-bottom: 0.75rem;
-            font-size: 1rem;
+            padding-top: 0.6rem;
+            padding-bottom: 0.6rem;
+            font-size: 0.95rem;
         }
-        #searchContainer.scrolled #sortBy {
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
+
+        /* เมื่อเลื่อนลง ใน Mobile จะซ่อนปุ่ม SortBy */
+        @media (max-width: 767px) {
+            #searchContainer.scrolled #sortWrapper {
+                display: none;
+            }
+            #searchContainer.scrolled .search-inner-flex {
+                flex-direction: row;
+            }
         }
+
         #searchContainer.scrolled #categoryFilters {
-            display: none; /* ซ่อนหมวดหมู่เมื่อเลื่อนลงเพื่อประหยัดพื้นที่ */
+            display: none;
         }
     </style>
 </head>
@@ -143,7 +150,8 @@
     <main class="max-w-7xl mx-auto px-4 md:px-6">
         <!-- Search & Filter Area with Shrink Animation -->
         <div id="searchContainer" class="glass sticky top-4 z-30 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-lg mb-8 flex flex-col gap-4 border border-pink-100">
-            <div class="flex flex-col md:flex-row gap-4">
+            <div class="flex flex-col md:flex-row gap-4 search-inner-flex">
+                <!-- Search Input Wrapper -->
                 <div class="relative flex-grow">
                     <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-pink-400">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -151,8 +159,9 @@
                     <input type="text" id="searchInput" placeholder="ค้นหาจากชื่อสินค้า..." 
                         class="w-full pl-11 pr-4 py-3 md:py-4 rounded-full border-none ring-2 ring-pink-50 focus:ring-4 focus:ring-pink-200 outline-none transition-all text-base md:text-xl font-light">
                 </div>
-                <div class="flex gap-2">
-                    <select id="sortBy" onchange="updateGrid()" class="pl-4 pr-10 py-3 rounded-full border-none ring-2 ring-pink-50 focus:ring-4 focus:ring-pink-200 outline-none transition-all text-sm md:text-base text-pink-500 font-medium bg-white cursor-pointer min-w-[140px]">
+                <!-- Sort Wrapper -->
+                <div id="sortWrapper" class="flex gap-2">
+                    <select id="sortBy" onchange="updateGrid()" class="w-full md:w-auto pl-4 pr-10 py-3 rounded-full border-none ring-2 ring-pink-50 focus:ring-4 focus:ring-pink-200 outline-none transition-all text-sm md:text-base text-pink-500 font-medium bg-white cursor-pointer min-w-[140px]">
                         <option value="default">จัดเรียงตาม</option>
                         <option value="name">ชื่อ (ก-ฮ)</option>
                         <option value="priceLow">ราคา (ต่ำ-สูง)</option>
@@ -196,21 +205,18 @@
 
         const placeholderImg = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRjk2MDk2IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTIwLjIgNmwtNy4xIDcuMWEyLjgyIDIuODIgMCAwIDEtNCAwbC03LjEtNy4xTTIgMTJWNmEyIDIgMCAwIDEgMi0yaDE2YTIgMiAwIDAgMSAyIDJ2MTJhMiAyIDAgMCAxLTIgMkg0YTIgMiAwIDAgMS0yLTJ2LTZ6Ii8+PC9zdmc+";
 
-        // ฟังก์ชันจัดการการเลื่อนหน้าจอ
         window.addEventListener('scroll', () => {
             const backToTopBtn = document.getElementById('backToTop');
             const searchContainer = document.getElementById('searchContainer');
             const header = document.getElementById('mainHeader');
             const scrollThreshold = header.offsetHeight;
 
-            // ปุ่มกลับด้านบน
             if (window.scrollY > 300) {
                 backToTopBtn.classList.add('show');
             } else {
                 backToTopBtn.classList.remove('show');
             }
 
-            // ย่อขนาด Search Container
             if (window.scrollY > scrollThreshold) {
                 searchContainer.classList.add('scrolled');
             } else {
