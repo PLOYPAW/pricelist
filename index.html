@@ -54,6 +54,19 @@
             object-fit: contain !important;
             opacity: 0.25 !important;
         }
+
+        .retail-floating-badge {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(249, 96, 150, 0.2);
+            padding: 4px 10px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
     </style>
 </head>
 <body class="min-h-screen pb-24">
@@ -192,7 +205,6 @@
             } else {
                 empty.classList.add('hidden');
                 grid.innerHTML = filtered.map((item, index) => {
-                    // ดึงข้อมูลราคาแบบ Step ขั้นบันได
                     const priceSteps = item.WholesalePriceStep ? item.WholesalePriceStep.split('|') : [];
                     const initialSrc = (item.ImageURL && item.ImageURL.length > 10) ? item.ImageURL : placeholderImg;
                     const initialClass = initialSrc === placeholderImg ? 'product-img is-placeholder' : 'product-img';
@@ -204,6 +216,14 @@
                                  onerror="handleImgError(this)" 
                                  class="${initialClass}"
                                  onload="this.style.opacity=1" style="opacity:0">
+                            
+                            <!-- ราคาขายปลีกแนะนำ (RetailPrice) วางลอยบนรูป -->
+                            ${item.RetailPrice ? `
+                            <div class="retail-floating-badge">
+                                <span class="text-[8px] md:text-[9px] block text-gray-400 font-light -mb-1">แนะนำขาย</span>
+                                <span class="text-xs md:text-sm font-bold text-pink-500 italic">฿${item.RetailPrice}</span>
+                            </div>
+                            ` : ''}
                         </div>
                         <div class="p-3 md:p-5 flex-grow flex flex-col">
                             <h3 class="text-sm md:text-lg font-medium text-gray-800 line-clamp-2 h-10 md:h-12 mb-2">${item.ItemName}</h3>
@@ -215,7 +235,7 @@
                                     <span class="text-[8px] md:text-[10px]">/ ${item.WholesaleUnit || 'หน่วย'}</span>
                                 </div>
                                 
-                                <!-- ส่วนแสดง BulkPrice / BulkQty (ราคาพิเศษตามจำนวน) แสดงบรรทัดถัดมา -->
+                                <!-- Step ราคาส่งพิเศษ (BulkPrice/BulkQty) แสดงบรรทัดถัดมา -->
                                 ${ (item.BulkPrice && item.BulkPrice !== '0') ? `
                                 <div class="mt-2 pt-2 border-t border-white/20 flex flex-col items-center">
                                     <span class="text-[9px] md:text-[10px] opacity-90 font-light">สั่ง ${item.BulkQty || '0'} ขึ้นไป</span>
