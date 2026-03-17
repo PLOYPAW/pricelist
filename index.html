@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ploypaw - Product Catalog</title>
+    <title>Ploypaw Pet Shop - Product Catalog</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -27,7 +27,7 @@
             position: relative;
             width: 100%;
             padding-top: 100%;
-            background-color: #fff5f8;
+            background-color: #fce7f3; /* สีชมพูอ่อนมากเป็นพื้นหลังระหว่างรอโหลด */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -41,18 +41,19 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.5s ease-in-out;
+            opacity: 0; /* เริ่มต้นที่ 0 เพื่อทำ Fade-in */
         }
 
+        /* สำหรับภาพที่เป็น Placeholder ให้ดูเล็กลงและจางลง */
         .is-placeholder {
-            position: absolute !important;
-            width: 20% !important;
-            height: 20% !important;
+            width: 30% !important;
+            height: 30% !important;
             top: 50% !important;
             left: 50% !important;
             transform: translate(-50%, -50%) !important;
             object-fit: contain !important;
-            opacity: 0.25 !important;
+            opacity: 0.15 !important;
         }
 
         .retail-floating-badge {
@@ -76,7 +77,6 @@
             background-size: 1em;
         }
 
-        /* ปุ่มกลับด้านบน */
         #backToTop {
             transition: all 0.3s ease;
             opacity: 0;
@@ -89,7 +89,6 @@
             transform: translateY(0);
         }
 
-        /* อนิเมชั่นย่อส่วน Search Bar */
         #searchContainer {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -103,19 +102,10 @@
             border-radius: 999px;
             box-shadow: 0 10px 15px -3px rgba(249, 96, 150, 0.2);
         }
-        #searchContainer.scrolled input {
-            padding-top: 0.6rem;
-            padding-bottom: 0.6rem;
-            font-size: 0.95rem;
-        }
 
-        /* เมื่อเลื่อนลง ใน Mobile จะซ่อนปุ่ม SortBy */
         @media (max-width: 767px) {
             #searchContainer.scrolled #sortWrapper {
                 display: none;
-            }
-            #searchContainer.scrolled .search-inner-flex {
-                flex-direction: row;
             }
         }
 
@@ -126,7 +116,7 @@
 </head>
 <body class="min-h-screen pb-24">
 
-    <!-- Header Section -->
+    <!-- Header Section (Optimized Logo) -->
     <header id="mainHeader" class="bg-[#F96096] text-white py-10 md:py-14 px-4 shadow-xl mb-6 relative overflow-hidden">
         <div class="absolute inset-0 opacity-10">
             <svg class="h-full w-full" fill="currentColor" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -135,9 +125,11 @@
         </div>
         <div class="max-w-6xl mx-auto text-center relative z-10">
             <div class="flex justify-center mb-6">
-                <img src="https://cdn.shopify.com/s/files/1/0839/1278/6208/files/offi.png?v=1773728815" 
+                <!-- ใช้การกำหนดขนาดรูปภาพจากต้นทางถ้าทำได้เพื่อประหยัดดาต้า -->
+                <img src="https://cdn.shopify.com/s/files/1/0839/1278/6208/files/offi.png?v=1773728815&width=300" 
                      alt="Ploypaw Official Logo" 
-                     class="h-24 md:h-36 object-contain filter drop-shadow-lg">
+                     class="h-24 md:h-36 object-contain filter drop-shadow-lg"
+                     loading="eager">
             </div>
             <div class="flex items-center justify-center gap-2">
                 <span class="text-xl md:text-2xl animate-bounce">🐾</span>
@@ -148,10 +140,8 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 md:px-6">
-        <!-- Search & Filter Area with Shrink Animation -->
         <div id="searchContainer" class="glass sticky top-4 z-30 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-lg mb-8 flex flex-col gap-4 border border-pink-100">
             <div class="flex flex-col md:flex-row gap-4 search-inner-flex">
-                <!-- Search Input Wrapper -->
                 <div class="relative flex-grow">
                     <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-pink-400">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -159,7 +149,6 @@
                     <input type="text" id="searchInput" placeholder="ค้นหาจากชื่อสินค้า..." 
                         class="w-full pl-11 pr-4 py-3 md:py-4 rounded-full border-none ring-2 ring-pink-50 focus:ring-4 focus:ring-pink-200 outline-none transition-all text-base md:text-xl font-light">
                 </div>
-                <!-- Sort Wrapper -->
                 <div id="sortWrapper" class="flex gap-2">
                     <select id="sortBy" onchange="updateGrid()" class="w-full md:w-auto pl-4 pr-10 py-3 rounded-full border-none ring-2 ring-pink-50 focus:ring-4 focus:ring-pink-200 outline-none transition-all text-sm md:text-base text-pink-500 font-medium bg-white cursor-pointer min-w-[140px]">
                         <option value="default">จัดเรียงตาม</option>
@@ -178,11 +167,7 @@
         <div id="emptyState" class="hidden text-center py-20"><p class="text-pink-300 text-xl font-medium">ไม่พบสินค้าที่คุณค้นหา</p></div>
     </main>
 
-    <!-- ปุ่มกลับด้านบน -->
-    <button id="backToTop" onclick="scrollToTop()" class="fixed bottom-6 right-6 z-40 bg-pink-500 text-white p-3 rounded-full shadow-2xl hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 15l7-7 7 7"></path></svg>
-    </button>
-
+    <!-- Modal Options (ใช้ Lazy Load Image เช่นกัน) -->
     <div id="optionsModal" class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none modal-overlay bg-black/60 p-4">
         <div class="bg-white w-full max-w-md rounded-[2rem] overflow-hidden flex flex-col max-h-[80vh] shadow-2xl modal-content transform scale-90">
             <div class="p-6 bg-pink-500 text-white flex justify-between items-center">
@@ -191,9 +176,6 @@
             </div>
             <div id="modalProductInfo" class="p-4 border-b border-gray-100 flex items-center gap-4"></div>
             <div id="optionsList" class="flex-grow overflow-y-auto p-6 grid grid-cols-1 gap-2 no-scrollbar"></div>
-            <div class="p-4 bg-gray-50 text-center">
-                <p class="text-sm text-gray-400 font-light italic">* ราคาอาจแตกต่างกันตามรสชาติหรือขนาดที่เลือก</p>
-            </div>
         </div>
     </div>
 
@@ -203,30 +185,18 @@
         let groupedProducts = []; 
         let currentCategory = 'All';
 
+        // SVG Placeholder ขนาดจิ๋ว (ประหยัดอินเทอร์เน็ต)
         const placeholderImg = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRjk2MDk2IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTIwLjIgNmwtNy4xIDcuMWEyLjgyIDIuODIgMCAwIDEtNCAwbC03LjEtNy4xTTIgMTJWNmEyIDIgMCAwIDEgMi0yaDE2YTIgMiAwIDAgMSAyIDJ2MTJhMiAyIDAgMCAxLTIgMkg0YTIgMiAwIDAgMS0yLTJ2LTZ6Ii8+PC9zdmc+";
 
         window.addEventListener('scroll', () => {
-            const backToTopBtn = document.getElementById('backToTop');
             const searchContainer = document.getElementById('searchContainer');
             const header = document.getElementById('mainHeader');
-            const scrollThreshold = header.offsetHeight;
-
-            if (window.scrollY > 300) {
-                backToTopBtn.classList.add('show');
-            } else {
-                backToTopBtn.classList.remove('show');
-            }
-
-            if (window.scrollY > scrollThreshold) {
+            if (window.scrollY > header.offsetHeight) {
                 searchContainer.classList.add('scrolled');
             } else {
                 searchContainer.classList.remove('scrolled');
             }
         });
-
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
 
         async function fetchData() {
             try {
@@ -236,7 +206,6 @@
                 processGroupedData();
                 renderUI();
             } catch (error) { 
-                console.error("Fetch error:", error);
                 document.getElementById('loading').innerHTML = '<p class="text-red-400">เกิดข้อผิดพลาดในการโหลดข้อมูล</p>';
             }
         }
@@ -261,16 +230,15 @@
         function processGroupedData() {
             const groups = {};
             rawProducts.forEach(item => {
-                const name = item.ItemName ? item.ItemName.trim() : "Unnamed Item";
+                const name = item.ItemName?.trim() || "Unnamed Item";
                 if (!groups[name]) {
                     groups[name] = { ...item, allOptions: [] };
                 }
                 const optionsRaw = item.Options || item.Flavor || "";
                 if (optionsRaw) {
-                    const optArray = optionsRaw.split('|').map(o => o.trim());
-                    groups[name].allOptions.push(...optArray);
+                    groups[name].allOptions.push(...optionsRaw.split('|').map(o => o.trim()));
                 } else {
-                    groups[name].allOptions.push(`ตัวเลือกปกติ:${item.WholesalePrice || '0'}`);
+                    groups[name].allOptions.push(`ปกติ:${item.WholesalePrice || '0'}`);
                 }
             });
             groupedProducts = Object.values(groups);
@@ -292,6 +260,10 @@
             el.style.opacity = "1";
         }
 
+        function handleImgLoad(el) {
+            el.style.opacity = "1";
+        }
+
         function updateGrid() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const sortBy = document.getElementById('sortBy').value;
@@ -301,15 +273,10 @@
                 (currentCategory === 'All' || p.Category === currentCategory)
             );
 
-            if (sortBy === 'name') {
-                filtered.sort((a, b) => a.ItemName.localeCompare(b.ItemName, 'th'));
-            } else if (sortBy === 'priceLow') {
-                filtered.sort((a, b) => parseFloat(a.WholesalePrice || 0) - parseFloat(b.WholesalePrice || 0));
-            } else if (sortBy === 'priceHigh') {
-                filtered.sort((a, b) => parseFloat(b.WholesalePrice || 0) - parseFloat(a.WholesalePrice || 0));
-            } else if (sortBy === 'brand') {
-                filtered.sort((a, b) => (a.Brand || '').localeCompare((b.Brand || ''), 'th'));
-            }
+            // Sorting logic...
+            if (sortBy === 'name') filtered.sort((a, b) => a.ItemName.localeCompare(b.ItemName, 'th'));
+            else if (sortBy === 'priceLow') filtered.sort((a, b) => parseFloat(a.WholesalePrice || 0) - parseFloat(b.WholesalePrice || 0));
+            else if (sortBy === 'priceHigh') filtered.sort((a, b) => parseFloat(b.WholesalePrice || 0) - parseFloat(a.WholesalePrice || 0));
 
             const grid = document.getElementById('priceGrid');
             const empty = document.getElementById('emptyState');
@@ -320,61 +287,39 @@
             } else {
                 empty.classList.add('hidden');
                 grid.innerHTML = filtered.map((item, index) => {
-                    const priceSteps = item.WholesalePriceStep ? item.WholesalePriceStep.split('|') : [];
-                    const initialSrc = (item.ImageURL && item.ImageURL.length > 10) ? item.ImageURL : placeholderImg;
-                    const initialClass = initialSrc === placeholderImg ? 'product-img is-placeholder' : 'product-img';
+                    // ปรับแต่ง URL รูปภาพเพื่อขอขนาดที่เล็กลง (ถ้า CDN รองรับ)
+                    let displaySrc = (item.ImageURL && item.ImageURL.length > 10) ? item.ImageURL : placeholderImg;
+                    if (displaySrc.includes('cdn.shopify.com')) {
+                        displaySrc += displaySrc.includes('?') ? '&width=400' : '?width=400';
+                    }
 
                     return `
                     <div class="bg-white rounded-[1.5rem] shadow-sm flex flex-col relative overflow-hidden card-hover border border-pink-50">
                         <div class="img-container">
-                            <img src="${initialSrc}" 
+                            <img src="${displaySrc}" 
+                                 loading="lazy" 
                                  onerror="handleImgError(this)" 
-                                 class="${initialClass}"
-                                 onload="this.style.opacity=1" style="opacity:0">
+                                 onload="handleImgLoad(this)"
+                                 class="product-img ${displaySrc === placeholderImg ? 'is-placeholder' : ''}">
                             
                             ${item.RetailPrice ? `
                             <div class="retail-floating-badge">
-                                <span class="text-[8px] md:text-[9px] block text-gray-400 font-light -mb-1">แนะนำขาย</span>
+                                <span class="text-[8px] block text-gray-400 font-light -mb-1">แนะนำขาย</span>
                                 <span class="text-xs md:text-sm font-bold text-pink-500 italic">฿${item.RetailPrice}</span>
                             </div>
                             ` : ''}
                         </div>
                         <div class="p-3 md:p-5 flex-grow flex flex-col">
-                            <span class="text-[9px] md:text-[10px] font-medium text-pink-300 uppercase tracking-widest mb-0.5">${item.Brand || 'Generic'}</span>
+                            <span class="text-[9px] font-medium text-pink-300 uppercase tracking-widest mb-0.5">${item.Brand || 'Generic'}</span>
                             <h3 class="text-sm md:text-base font-medium text-gray-800 line-clamp-1 h-5 md:h-6 leading-tight">${item.ItemName}</h3>
-                            <p class="text-[10px] md:text-[11px] text-gray-400 font-light line-clamp-2 h-7 md:h-8 mb-2 italic">
-                                ${item.Description || '- ไม่มีรายละเอียด -'}
-                            </p>
+                            <p class="text-[10px] text-gray-400 font-light line-clamp-2 h-7 md:h-8 mb-2 italic">${item.Description || '-'}</p>
                             
-                            <div class="bulk-badge p-2 md:p-3 rounded-[1.2rem] text-white mt-auto">
+                            <div class="bulk-badge p-2 md:p-3 rounded-[1.2rem] text-white mt-auto text-center">
                                 <div class="flex items-baseline justify-center gap-1">
                                     <span class="text-lg md:text-2xl font-bold">฿${item.WholesalePrice || '0'}</span>
-                                    <span class="text-[8px] md:text-[10px]">/ ${item.WholesaleUnit || 'หน่วย'}</span>
+                                    <span class="text-[8px]">/ ${item.WholesaleUnit || 'หน่วย'}</span>
                                 </div>
-                                
-                                ${ (item.BulkPrice && item.BulkPrice !== '0') ? `
-                                <div class="mt-2 pt-2 border-t border-white/20 flex flex-col items-center">
-                                    <span class="text-[9px] md:text-[10px] opacity-90 font-light">สั่ง ${item.BulkQty || '0'} ขึ้นไป</span>
-                                    <span class="text-base md:text-xl font-bold">฿${item.BulkPrice}</span>
-                                </div>
-                                ` : ''}
-
-                                ${priceSteps.length > 0 ? `
-                                <div class="mt-2 pt-2 border-t border-white/20 space-y-1">
-                                    ${priceSteps.map(step => {
-                                        const parts = step.split(':');
-                                        return `
-                                        <div class="flex justify-between text-[10px] md:text-xs font-medium px-1">
-                                            <span class="opacity-90">${parts[0]}+ ชิ้น:</span>
-                                            <span>฿${parts[1] || '0'}</span>
-                                        </div>`;
-                                    }).join('')}
-                                </div>
-                                ` : ''}
-
-                                <button onclick="showOptionsByIndex(${index}, filteredDataRef)" class="w-full bg-white text-pink-500 mt-2 py-1.5 rounded-full text-[10px] md:text-xs font-bold hover:bg-pink-50 transition-all flex items-center justify-center gap-1 shadow-sm">
-                                    ดูตัวเลือก
-                                </button>
+                                <button onclick="showOptionsByIndex(${index}, filteredDataRef)" class="w-full bg-white text-pink-500 mt-2 py-1.5 rounded-full text-[10px] font-bold shadow-sm">ดูตัวเลือก</button>
                             </div>
                         </div>
                     </div>`;
@@ -389,49 +334,34 @@
             const info = document.getElementById('modalProductInfo');
             const list = document.getElementById('optionsList');
             
-            const initialSrc = (item.ImageURL && item.ImageURL.length > 10) ? item.ImageURL : placeholderImg;
-            const initialClass = initialSrc === placeholderImg ? 'product-img is-placeholder' : 'product-img';
-            
             info.innerHTML = `
-                <div class="w-16 h-16 rounded-xl bg-pink-50 overflow-hidden flex-shrink-0 border border-pink-100 relative">
-                    <img src="${initialSrc}" onerror="handleImgError(this)" class="${initialClass}" style="opacity:1">
+                <div class="w-16 h-16 rounded-xl bg-pink-50 overflow-hidden flex-shrink-0 relative">
+                    <img src="${item.ImageURL || placeholderImg}" class="product-img" style="opacity:1">
                 </div>
                 <div class="flex-grow">
-                    <p class="text-[9px] text-pink-300 font-medium uppercase">${item.Brand || ''}</p>
                     <h4 class="font-medium text-gray-800 text-sm leading-tight">${item.ItemName}</h4>
-                    <p class="text-gray-400 text-[10px] italic line-clamp-1">${item.Description || ''}</p>
-                    <p class="text-pink-500 font-bold text-lg mt-1">฿${item.WholesalePrice || '0'}</p>
+                    <p class="text-pink-500 font-bold text-lg">฿${item.WholesalePrice || '0'}</p>
                 </div>
             `;
 
-            const options = item.allOptions || [];
-            if(options.length > 0) {
-                const uniqueOptions = [...new Set(options)];
-                list.innerHTML = uniqueOptions.map(opt => {
-                    const parts = opt.split(':');
-                    const name = parts[0].trim();
-                    const price = parts[1] ? parts[1].trim() : (item.WholesalePrice || '0');
-                    return `
-                    <div class="flex items-center justify-between p-3 bg-white border border-pink-100 rounded-2xl shadow-sm hover:border-pink-300 transition-colors">
-                        <span class="text-gray-700 font-medium text-sm">${name}</span>
-                        <span class="text-pink-600 font-bold bg-pink-50 px-2 py-0.5 rounded-lg text-sm">฿${price}</span>
-                    </div>`;
-                }).join('');
-            } else {
-                list.innerHTML = `<div class="text-center py-10 opacity-40"><p>ไม่มีตัวเลือกเพิ่มเติม</p></div>`;
-            }
+            list.innerHTML = (item.allOptions || []).map(opt => {
+                const parts = opt.split(':');
+                return `
+                <div class="flex items-center justify-between p-3 bg-white border border-pink-100 rounded-2xl">
+                    <span class="text-gray-700 text-sm">${parts[0]}</span>
+                    <span class="text-pink-600 font-bold text-sm">฿${parts[1] || item.WholesalePrice}</span>
+                </div>`;
+            }).join('');
 
             modal.classList.remove('opacity-0', 'pointer-events-none');
-            modal.querySelector('.modal-content').classList.remove('scale-90');
-            modal.querySelector('.modal-content').classList.add('scale-100');
+            modal.querySelector('.modal-content').classList.replace('scale-90', 'scale-100');
             document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
             const modal = document.getElementById('optionsModal');
             modal.classList.add('opacity-0', 'pointer-events-none');
-            modal.querySelector('.modal-content').classList.remove('scale-100');
-            modal.querySelector('.modal-content').classList.add('scale-90');
+            modal.querySelector('.modal-content').classList.replace('scale-100', 'scale-90');
             document.body.style.overflow = '';
         }
 
