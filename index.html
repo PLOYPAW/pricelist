@@ -201,27 +201,14 @@
         let groupedProducts = []; 
         let currentCategory = 'All';
 
-        const placeholderImg = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRjk2MDk2IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTIwLjIgNmwtNy4xIDcuMWEyLjgyIDIuODIgMCAwIDEtNCAwbC03LjEtNy4xTTIgMTJWNmEyIDIgMCAwIDEgMi0yaDE2YTIgMiAwIDAgMSAyIDJ2MTJhMiAyIDAgMCAxLTIgMkg0YTIgMiAwIDAgMS0yLTJ2LTZ6Ii8+PC9zdmc+";
+        const placeholderImg = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRjk2MDk2IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTIwLjIgNmwtNy4xIDcuMWEyLjgyIDEuODIgMCAwIDEtNCAwbC03LjEtNy4xTTIgMTJWNmEyIDIgMCAwIDEgMi0yaDE2YTIgMiAwIDAgMSAyIDJ2MTJhMiAyIDAgMCAxLTIgMkg0YTIgMiAwIDAgMS0yLTJ2LTZ6Ii8+PC9zdmc+";
 
-        // Scroll Event Listener สำหรับ UI ย่อส่วน
         window.addEventListener('scroll', () => {
             const searchContainer = document.getElementById('searchContainer');
             const header = document.getElementById('mainHeader');
             const backToTop = document.getElementById('backToTop');
-            
-            // ปัดปุ่ม Back to Top
-            if (window.scrollY > 300) {
-                backToTop.classList.add('visible');
-            } else {
-                backToTop.classList.remove('visible');
-            }
-
-            // ย่อ Search Bar
-            if (window.scrollY > header.offsetHeight - 50) {
-                searchContainer.classList.add('scrolled');
-            } else {
-                searchContainer.classList.remove('scrolled');
-            }
+            if (window.scrollY > 300) { backToTop.classList.add('visible'); } else { backToTop.classList.remove('visible'); }
+            if (window.scrollY > header.offsetHeight - 50) { searchContainer.classList.add('scrolled'); } else { searchContainer.classList.remove('scrolled'); }
         });
 
         async function fetchData() {
@@ -257,15 +244,10 @@
             const groups = {};
             rawProducts.forEach(item => {
                 const name = item.ItemName?.trim() || "Unnamed Item";
-                if (!groups[name]) {
-                    groups[name] = { ...item, allOptions: [] };
-                }
+                if (!groups[name]) { groups[name] = { ...item, allOptions: [] }; }
                 const optionsRaw = item.Options || item.Flavor || "";
-                if (optionsRaw) {
-                    groups[name].allOptions.push(...optionsRaw.split('|').map(o => o.trim()));
-                } else {
-                    groups[name].allOptions.push(`ปกติ:${item.WholesalePrice || '0'}`);
-                }
+                if (optionsRaw) { groups[name].allOptions.push(...optionsRaw.split('|').map(o => o.trim())); } 
+                else { groups[name].allOptions.push(`ปกติ:${item.WholesalePrice || '0'}`); }
             });
             groupedProducts = Object.values(groups);
         }
@@ -281,55 +263,30 @@
 
         function handleImgError(el) {
             if (el.getAttribute('src') === placeholderImg) return; 
-            el.src = placeholderImg;
-            el.classList.add('is-placeholder');
-            el.style.opacity = "1";
+            el.src = placeholderImg; el.classList.add('is-placeholder'); el.style.opacity = "1";
         }
-
         function handleImgLoad(el) { el.style.opacity = "1"; }
 
         function updateGrid() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const sortBy = document.getElementById('sortBy').value;
-            
-            let filtered = groupedProducts.filter(p => 
-                (p.ItemName?.toLowerCase().includes(searchTerm)) && 
-                (currentCategory === 'All' || p.Category === currentCategory)
-            );
-
+            let filtered = groupedProducts.filter(p => (p.ItemName?.toLowerCase().includes(searchTerm)) && (currentCategory === 'All' || p.Category === currentCategory));
             if (sortBy === 'name') filtered.sort((a, b) => a.ItemName.localeCompare(b.ItemName, 'th'));
             else if (sortBy === 'priceLow') filtered.sort((a, b) => parseFloat(a.WholesalePrice || 0) - parseFloat(b.WholesalePrice || 0));
             else if (sortBy === 'priceHigh') filtered.sort((a, b) => parseFloat(b.WholesalePrice || 0) - parseFloat(a.WholesalePrice || 0));
 
             const grid = document.getElementById('priceGrid');
             const empty = document.getElementById('emptyState');
-            
-            if(filtered.length === 0) {
-                grid.innerHTML = '';
-                empty.classList.remove('hidden');
-            } else {
+            if(filtered.length === 0) { grid.innerHTML = ''; empty.classList.remove('hidden'); } else {
                 empty.classList.add('hidden');
                 grid.innerHTML = filtered.map((item, index) => {
                     let displaySrc = (item.ImageURL && item.ImageURL.length > 10) ? item.ImageURL : placeholderImg;
-                    if (displaySrc.includes('cdn.shopify.com')) {
-                        displaySrc += displaySrc.includes('?') ? '&width=400' : '?width=400';
-                    }
-
+                    if (displaySrc.includes('cdn.shopify.com')) { displaySrc += displaySrc.includes('?') ? '&width=400' : '?width=400'; }
                     return `
                     <div class="bg-white rounded-[1.5rem] shadow-sm flex flex-col relative overflow-hidden card-hover border border-pink-50">
                         <div class="img-container">
-                            <img src="${displaySrc}" 
-                                 loading="lazy" 
-                                 onerror="handleImgError(this)" 
-                                 onload="handleImgLoad(this)"
-                                 class="product-img ${displaySrc === placeholderImg ? 'is-placeholder' : ''}">
-                            
-                            ${item.RetailPrice ? `
-                            <div class="retail-floating-badge">
-                                <span class="text-[8px] block text-gray-400 font-light -mb-1">แนะนำขาย</span>
-                                <span class="text-xs md:text-sm font-bold text-pink-500 italic">฿${item.RetailPrice}</span>
-                            </div>
-                            ` : ''}
+                            <img src="${displaySrc}" loading="lazy" onerror="handleImgError(this)" onload="handleImgLoad(this)" class="product-img ${displaySrc === placeholderImg ? 'is-placeholder' : ''}">
+                            ${item.RetailPrice ? `<div class="retail-floating-badge"><span class="text-[8px] block text-gray-400 font-light -mb-1">แนะนำขาย</span><span class="text-xs md:text-sm font-bold text-pink-500 italic">฿${item.RetailPrice}</span></div>` : ''}
                         </div>
                         <div class="p-3 md:p-5 flex-grow flex flex-col">
                             <span class="text-[9px] font-medium text-pink-300 uppercase tracking-widest mb-0.5">${item.Brand || 'Generic'}</span>
@@ -338,43 +295,27 @@
                             
                             <div class="bulk-badge p-2 md:p-3 rounded-[1.2rem] text-white mt-auto text-center flex flex-col gap-1.5">
                                 <div class="flex flex-col items-center">
-                                    <span class="text-[8px] opacity-90 font-light leading-none mb-1 uppercase tracking-tighter">ราคาส่ง (ขั้นต่ำ ${item.MinWholesaleQty || '1'} ${item.WholesaleUnit || ''})</span>
+                                    <span class="text-[8px] opacity-90 font-light leading-none mb-1 uppercase tracking-tighter">ราคาส่ง (ขั้นต่ำ ${item.MinWholesaleQty || '1'})</span>
                                     <div class="flex items-baseline gap-1">
                                         <span class="text-lg md:text-2xl font-bold">฿${item.WholesalePrice || '0'}</span>
                                         <span class="text-[8px]">/ ${item.WholesaleUnit || ''}</span>
                                     </div>
                                 </div>
-                                
                                 ${ (item.BulkPrice && item.BulkPrice !== '0' && item.BulkPrice !== item.WholesalePrice) ? `
                                 <div class="pt-1.5 border-t border-white/20 flex flex-col items-center">
-                                    <span class="text-[8px] font-light opacity-90 leading-none mb-1 italic tracking-tighter">Step 2: สั่ง ${item.BulkQty || '0'} ${item.WholesaleUnit || ''} ขึ้นไป</span>
-                                    <div class="flex items-baseline gap-1">
-                                        <span class="text-sm md:text-xl font-bold">฿${item.BulkPrice}</span>
-                                        <span class="text-[7px]">/ ${item.WholesaleUnit || ''}</span>
-                                    </div>
-                                </div>
-                                ` : ''}
-
+                                    <span class="text-[8px] font-light opacity-90 leading-none mb-1 italic tracking-tighter">Step 2: สั่ง ${item.BulkQty || '0'} ขึ้นไป</span>
+                                    <div class="flex items-baseline gap-1"><span class="text-sm md:text-xl font-bold">฿${item.BulkPrice}</span></div>
+                                </div>` : ''}
                                 ${ (item.BulkPrice2 && item.BulkPrice2 !== '0') ? `
                                 <div class="pt-1.5 border-t border-white/10 flex flex-col items-center">
-                                    <span class="text-[8px] font-light opacity-90 leading-none mb-1 italic tracking-tighter">Step 3: สั่ง ${item.BulkQty2 || '0'} ${item.WholesaleUnit || ''} ขึ้นไป</span>
-                                    <div class="flex items-baseline gap-1">
-                                        <span class="text-sm md:text-xl font-bold text-yellow-200">฿${item.BulkPrice2}</span>
-                                        <span class="text-[7px]">/ ${item.WholesaleUnit || ''}</span>
-                                    </div>
-                                </div>
-                                ` : ''}
-
+                                    <span class="text-[8px] font-light opacity-90 leading-none mb-1 italic tracking-tighter">Step 3: สั่ง ${item.BulkQty2 || '0'} ขึ้นไป</span>
+                                    <div class="flex items-baseline gap-1"><span class="text-sm md:text-xl font-bold text-yellow-200">฿${item.BulkPrice2}</span></div>
+                                </div>` : ''}
                                 ${ (item.BulkPrice3 && item.BulkPrice3 !== '0') ? `
                                 <div class="pt-1.5 border-t border-white/10 flex flex-col items-center">
-                                    <span class="text-[8px] font-bold text-yellow-300 leading-none mb-1 italic tracking-tighter">VIP: สั่ง ${item.BulkQty3 || '0'} ${item.WholesaleUnit || ''} ขึ้นไป</span>
-                                    <div class="flex items-baseline gap-1">
-                                        <span class="text-sm md:text-xl font-black text-yellow-300">฿${item.BulkPrice3}</span>
-                                        <span class="text-[7px]">/ ${item.WholesaleUnit || ''}</span>
-                                    </div>
-                                </div>
-                                ` : ''}
-
+                                    <span class="text-[8px] font-bold text-yellow-300 leading-none mb-1 italic tracking-tighter">VIP: สั่ง ${item.BulkQty3 || '0'} ขึ้นไป</span>
+                                    <div class="flex items-baseline gap-1"><span class="text-sm md:text-xl font-black text-yellow-300">฿${item.BulkPrice3}</span></div>
+                                </div>` : ''}
                                 <button onclick="showOptionsByIndex(${index}, filteredDataRef)" class="w-full bg-white text-pink-500 mt-1 py-1.5 rounded-full text-[10px] font-bold shadow-sm active:scale-95 transition-transform">ดูตัวเลือก</button>
                             </div>
                         </div>
@@ -389,38 +330,11 @@
             const modal = document.getElementById('optionsModal');
             const info = document.getElementById('modalProductInfo');
             const list = document.getElementById('optionsList');
-            
-            info.innerHTML = `
-                <div class="w-16 h-16 rounded-xl bg-pink-50 overflow-hidden flex-shrink-0 relative">
-                    <img src="${item.ImageURL || placeholderImg}" class="product-img" style="opacity:1">
-                </div>
-                <div class="flex-grow">
-                    <h4 class="font-medium text-gray-800 text-sm leading-tight">${item.ItemName}</h4>
-                    <p class="text-pink-500 font-bold text-lg">เริ่มต้น ฿${item.WholesalePrice || '0'}</p>
-                </div>
-            `;
-
-            list.innerHTML = (item.allOptions || []).map(opt => {
-                const parts = opt.split(':');
-                return `
-                <div class="flex items-center justify-between p-3 bg-white border border-pink-100 rounded-2xl">
-                    <span class="text-gray-700 text-sm font-light">${parts[0]}</span>
-                    <span class="text-pink-600 font-bold text-sm">฿${parts[1] || item.WholesalePrice}</span>
-                </div>`;
-            }).join('');
-
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            modal.querySelector('.modal-content').classList.replace('scale-90', 'scale-100');
-            document.body.style.overflow = 'hidden';
+            info.innerHTML = `<div class="w-16 h-16 rounded-xl bg-pink-50 overflow-hidden flex-shrink-0 relative"><img src="${item.ImageURL || placeholderImg}" class="product-img" style="opacity:1"></div><div class="flex-grow"><h4 class="font-medium text-gray-800 text-sm leading-tight">${item.ItemName}</h4><p class="text-pink-500 font-bold text-lg">เริ่มต้น ฿${item.WholesalePrice || '0'}</p></div>`;
+            list.innerHTML = (item.allOptions || []).map(opt => { const parts = opt.split(':'); return `<div class="flex items-center justify-between p-3 bg-white border border-pink-100 rounded-2xl"><span class="text-gray-700 text-sm font-light">${parts[0]}</span><span class="text-pink-600 font-bold text-sm">฿${parts[1] || item.WholesalePrice}</span></div>`; }).join('');
+            modal.classList.remove('opacity-0', 'pointer-events-none'); modal.querySelector('.modal-content').classList.replace('scale-90', 'scale-100'); document.body.style.overflow = 'hidden';
         }
-
-        function closeModal() {
-            const modal = document.getElementById('optionsModal');
-            modal.classList.add('opacity-0', 'pointer-events-none');
-            modal.querySelector('.modal-content').classList.replace('scale-100', 'scale-90');
-            document.body.style.overflow = '';
-        }
-
+        function closeModal() { const modal = document.getElementById('optionsModal'); modal.classList.add('opacity-0', 'pointer-events-none'); modal.querySelector('.modal-content').classList.replace('scale-100', 'scale-90'); document.body.style.overflow = ''; }
         function filterCategory(cat) { currentCategory = cat; renderUI(); }
         document.getElementById('searchInput').addEventListener('input', updateGrid);
         window.onload = fetchData;
