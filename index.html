@@ -55,6 +55,27 @@
             opacity: 0.15 !important;
         }
 
+        .promo-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #ff4d4d;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 600;
+            z-index: 20;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
         .retail-floating-badge {
             position: absolute;
             bottom: 8px;
@@ -68,19 +89,6 @@
             z-index: 10;
         }
 
-        select {
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F96096' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 1em;
-        }
-
-        /* Animation ย่อขนาด Search Container */
-        #searchContainer {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
         #searchContainer.scrolled {
             padding: 0.75rem 1.5rem;
             max-width: 600px;
@@ -91,23 +99,13 @@
             border-color: rgba(249, 96, 150, 0.3);
         }
 
-        /* ซ่อน Category และ Sort ใน Mobile เมื่อเลื่อนลง */
         @media (max-width: 768px) {
             #searchContainer.scrolled #categoryFilters,
             #searchContainer.scrolled #sortWrapper {
                 display: none;
             }
-            #searchContainer.scrolled .search-inner-flex {
-                flex-direction: row;
-            }
-            #searchContainer.scrolled input {
-                padding-top: 0.5rem;
-                padding-bottom: 0.5rem;
-                font-size: 0.875rem;
-            }
         }
 
-        /* Back to Top Button */
         #backToTop {
             position: fixed;
             bottom: 24px;
@@ -118,11 +116,7 @@
             transition: all 0.3s ease;
             pointer-events: none;
         }
-        #backToTop.visible {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
+        #backToTop.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
     </style>
 </head>
 <body class="min-h-screen pb-24">
@@ -166,7 +160,7 @@
                         <option value="name">ชื่อ (ก-ฮ)</option>
                         <option value="priceLow">ราคา (ต่ำ-สูง)</option>
                         <option value="priceHigh">ราคา (สูง-ต่ำ)</option>
-                        <option value="brand">แบรนด์ (A-Z)</option>
+                        <option value="promo">สินค้าโปรโมชั่น</option>
                     </select>
                 </div>
             </div>
@@ -271,9 +265,11 @@
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const sortBy = document.getElementById('sortBy').value;
             let filtered = groupedProducts.filter(p => (p.ItemName?.toLowerCase().includes(searchTerm)) && (currentCategory === 'All' || p.Category === currentCategory));
+            
             if (sortBy === 'name') filtered.sort((a, b) => a.ItemName.localeCompare(b.ItemName, 'th'));
             else if (sortBy === 'priceLow') filtered.sort((a, b) => parseFloat(a.WholesalePrice || 0) - parseFloat(b.WholesalePrice || 0));
             else if (sortBy === 'priceHigh') filtered.sort((a, b) => parseFloat(b.WholesalePrice || 0) - parseFloat(a.WholesalePrice || 0));
+            else if (sortBy === 'promo') filtered = filtered.filter(p => p.Promotion);
 
             const grid = document.getElementById('priceGrid');
             const empty = document.getElementById('emptyState');
@@ -282,8 +278,13 @@
                 grid.innerHTML = filtered.map((item, index) => {
                     let displaySrc = (item.ImageURL && item.ImageURL.length > 10) ? item.ImageURL : placeholderImg;
                     if (displaySrc.includes('cdn.shopify.com')) { displaySrc += displaySrc.includes('?') ? '&width=400' : '?width=400'; }
+                    
+                    // ตรวจสอบสถานะโปรโมชั่น
+                    const promoText = item.Promotion || "";
+
                     return `
                     <div class="bg-white rounded-[1.5rem] shadow-sm flex flex-col relative overflow-hidden card-hover border border-pink-50">
+                        ${promoText ? `<div class="promo-badge">🔥 ${promoText}</div>` : ''}
                         <div class="img-container">
                             <img src="${displaySrc}" loading="lazy" onerror="handleImgError(this)" onload="handleImgLoad(this)" class="product-img ${displaySrc === placeholderImg ? 'is-placeholder' : ''}">
                             ${item.RetailPrice ? `<div class="retail-floating-badge"><span class="text-[8px] block text-gray-400 font-light -mb-1">แนะนำขาย</span><span class="text-xs md:text-sm font-bold text-pink-500 italic">฿${item.RetailPrice}</span></div>` : ''}
