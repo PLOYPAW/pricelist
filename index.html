@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ploypaw - Product Catalog</title>
+    <title>Ploypaw Pet Shop - Product Catalog</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -55,6 +55,7 @@
             opacity: 0.15 !important;
         }
 
+        /* Promotion Badge */
         .promo-badge {
             position: absolute;
             top: 10px;
@@ -68,7 +69,7 @@
             z-index: 20;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             animation: pulse 2s infinite;
-            cursor: pointer; /* เพิ่มเพื่อให้รู้ว่าคลิกได้ */
+            cursor: pointer;
         }
 
         @keyframes pulse {
@@ -90,7 +91,7 @@
             z-index: 10;
         }
 
-        /* ปรับปรุงความ Smooth ของ Search Container ในมือถือ */
+        /* Search Container Smoothing */
         #searchContainer {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: transform, padding, border-radius;
@@ -149,19 +150,13 @@
             </svg>
         </div>
         <div class="max-w-6xl mx-auto text-center relative z-10">
-            <div class="flex justify-center mb-6">
+            <div class="flex justify-center mb-4">
                 <img src="https://cdn.shopify.com/s/files/1/0839/1278/6208/files/offi.png?v=1773728815&width=300" 
                      alt="Ploypaw Official Logo" 
                      class="h-24 md:h-36 object-contain filter drop-shadow-lg"
                      loading="eager">
             </div>
-            <div class="flex items-center justify-center gap-2">
-                <span class="text-xl md:text-2xl animate-bounce">🐾</span>
-                <p class="text-lg md:text-xl font-normal text-pink-50">รายการสินค้าราคาส่ง</p>
-                <span class="text-xl md:text-2xl animate-bounce">🐾</span>
-            </div>
-        </div>
-         
+            
             <!-- Minimalistic Order Button -->
             <div class="flex flex-col items-center justify-center gap-3">
                 <button onclick="openShippingModal()" class="group flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/40 px-4 py-1.5 rounded-full transition-all active:scale-95 shadow-sm">
@@ -171,40 +166,9 @@
                     </span>
                 </button>
             </div>
-    </header>
-<!-- Shipping Conditions Modal -->
-    <div id="shippingModal" class="fixed inset-0 z-[70] flex items-center justify-center opacity-0 pointer-events-none modal-overlay bg-black/60 backdrop-blur-sm p-4">
-        <div class="bg-white w-full max-w-sm rounded-[2.5rem] overflow-hidden shadow-2xl modal-content transform scale-90">
-            <div class="p-6 bg-gradient-to-br from-pink-500 to-rose-400 text-white text-center relative">
-                <h3 class="text-xl font-medium mb-1">เงื่อนไขการสั่งซื้อ</h3>
-                <p class="text-pink-100 text-xs font-light">สำหรับสมาชิกร้านค้า Ploypaw</p>
-                <button onclick="closeShippingModal()" class="absolute top-4 right-4 text-white/80 hover:text-white">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-            <div class="p-8 space-y-4">
-                <div class="flex gap-4">
-                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-pink-100 text-pink-500 text-xs flex items-center justify-center font-bold">1</span>
-                    <p class="text-sm text-gray-600 leading-relaxed">เปิดบิลขั้นต่ำ <span class="font-semibold text-pink-600">5,000 บาท</span> เฉพาะบิลแรกเท่านั้น</p>
-                </div>
-                <div class="flex gap-4">
-                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-pink-100 text-pink-500 text-xs flex items-center justify-center font-bold">2</span>
-                    <p class="text-sm text-gray-600 leading-relaxed">ราคาขายดังกล่าวมีผลเฉพาะ <span class="font-semibold text-gray-800">ร้านค้า</span> ไม่รวมถึงผู้บริโภคทั่วไป</p>
-                </div>
-                <div class="flex gap-4">
-                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-pink-100 text-pink-500 text-xs flex items-center justify-center font-bold">3</span>
-                    <div class="text-sm text-gray-600 leading-relaxed">
-                        ราคาสินค้ายังไม่รวมค่าจัดส่ง
-                        <p class="mt-2 p-3 bg-pink-50 rounded-2xl border border-pink-100 text-[13px]">
-                            📍 พื้นที่รัศมีไม่เกิน 30 กม. เมื่อซื้อครบ 15,000 บาทขึ้นไป <span class="text-green-600 font-bold italic text-sm">จัดส่งฟรี</span>
-                        </p>
-                    </div>
-                </div>
-                <button onclick="closeShippingModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-500 py-3 rounded-2xl text-sm font-medium transition-colors mt-4">
-                    รับทราบ
-                </button>
-            </div>
         </div>
+    </header>
+
     <main class="max-w-7xl mx-auto px-4 md:px-6">
         <!-- Search & Category Bar -->
         <div id="searchContainer" class="glass sticky top-4 z-30 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-lg mb-8 flex flex-col gap-4 border border-pink-100">
@@ -239,11 +203,11 @@
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
     </button>
 
-    <!-- Modal Options -->
+    <!-- Options Modal -->
     <div id="optionsModal" class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none modal-overlay bg-black/60 p-4">
         <div class="bg-white w-full max-w-md rounded-[2rem] overflow-hidden flex flex-col max-h-[85vh] shadow-2xl modal-content transform scale-90">
             <div class="p-6 bg-pink-500 text-white flex justify-between items-center">
-                <h2 id="modalTitle" class="text-xl font-medium">ตัวเลือก/รสชาติสินค้า</h2>
+                <h2 id="modalTitle" class="text-xl font-medium">ตัวเลือกสินค้า</h2>
                 <button onclick="closeModal()" class="text-white hover:rotate-90 transition-transform"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
             <div id="modalProductInfo" class="p-4 border-b border-gray-100 flex items-center gap-4"></div>
@@ -251,7 +215,7 @@
         </div>
     </div>
 
-    <!-- Promo Modal (New) -->
+    <!-- Promotion Details Modal -->
     <div id="promoModal" class="fixed inset-0 z-[60] flex items-center justify-center opacity-0 pointer-events-none modal-overlay bg-black/70 p-4">
         <div class="bg-white w-full max-w-lg rounded-[2.5rem] overflow-hidden flex flex-col max-h-[90vh] shadow-2xl modal-content transform scale-90">
             <div class="relative w-full aspect-square bg-pink-50">
@@ -264,6 +228,41 @@
                 <div class="inline-block px-4 py-1 bg-red-500 text-white rounded-full text-xs font-bold mb-3 animate-bounce">PROMOTION</div>
                 <h2 id="promoModalTitle" class="text-2xl font-bold text-gray-800 mb-2"></h2>
                 <p id="promoModalDesc" class="text-pink-500 text-lg font-medium"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shipping Conditions Modal -->
+    <div id="shippingModal" class="fixed inset-0 z-[70] flex items-center justify-center opacity-0 pointer-events-none modal-overlay bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white w-full max-w-sm rounded-[2.5rem] overflow-hidden shadow-2xl modal-content transform scale-90">
+            <div class="p-6 bg-gradient-to-br from-pink-500 to-rose-400 text-white text-center relative">
+                <h3 class="text-xl font-medium mb-1">เงื่อนไขการสั่งซื้อ</h3>
+                <p class="text-pink-100 text-xs font-light">สำหรับสมาชิกร้านค้า Ploypaw</p>
+                <button onclick="closeShippingModal()" class="absolute top-4 right-4 text-white/80 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-8 space-y-4">
+                <div class="flex gap-4">
+                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-pink-100 text-pink-500 text-xs flex items-center justify-center font-bold">1</span>
+                    <p class="text-sm text-gray-600 leading-relaxed">เปิดบิลขั้นต่ำ <span class="font-semibold text-pink-600">5,000 บาท</span> เฉพาะบิลแรกเท่านั้น</p>
+                </div>
+                <div class="flex gap-4">
+                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-pink-100 text-pink-500 text-xs flex items-center justify-center font-bold">2</span>
+                    <p class="text-sm text-gray-600 leading-relaxed">ราคาขายดังกล่าวมีผลเฉพาะ <span class="font-semibold text-gray-800">ร้านค้า</span> ไม่รวมถึงผู้บริโภคทั่วไป</p>
+                </div>
+                <div class="flex gap-4">
+                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-pink-100 text-pink-500 text-xs flex items-center justify-center font-bold">3</span>
+                    <div class="text-sm text-gray-600 leading-relaxed">
+                        ราคาสินค้ายังไม่รวมค่าจัดส่ง
+                        <p class="mt-2 p-3 bg-pink-50 rounded-2xl border border-pink-100 text-[13px]">
+                            📍 พื้นที่รัศมีไม่เกิน 30 กม. เมื่อซื้อครบ 15,000 บาทขึ้นไป <span class="text-green-600 font-bold italic text-sm">จัดส่งฟรี</span>
+                        </p>
+                    </div>
+                </div>
+                <button onclick="closeShippingModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-500 py-3 rounded-2xl text-sm font-medium transition-colors mt-4">
+                    รับทราบ
+                </button>
             </div>
         </div>
     </div>
@@ -281,13 +280,9 @@
             const header = document.getElementById('mainHeader');
             const backToTop = document.getElementById('backToTop');
             
-            if (window.scrollY > 300) { 
-                backToTop.classList.add('visible'); 
-            } else { 
-                backToTop.classList.remove('visible'); 
-            }
+            if (window.scrollY > 300) { backToTop.classList.add('visible'); } 
+            else { backToTop.classList.remove('visible'); }
             
-            // ปรับ logic ให้ทำงาน smooth ขึ้น
             if (window.scrollY > header.offsetHeight - 20) { 
                 if(!searchContainer.classList.contains('scrolled')) searchContainer.classList.add('scrolled'); 
             } else { 
@@ -323,21 +318,7 @@
             }
             return result;
         }
-        // Shipping Modal Logic
-        function openShippingModal() {
-            const modal = document.getElementById('shippingModal');
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            modal.querySelector('.modal-content').classList.replace('scale-90', 'scale-100');
-            document.body.style.overflow = 'hidden';
-        }
 
-        function closeShippingModal() {
-            const modal = document.getElementById('shippingModal');
-            modal.classList.add('opacity-0', 'pointer-events-none');
-            modal.querySelector('.modal-content').classList.replace('scale-100', 'scale-90');
-            document.body.style.overflow = '';
-        }
-        
         function processGroupedData() {
             const groups = {};
             rawProducts.forEach(item => {
@@ -382,12 +363,16 @@
                 grid.innerHTML = filtered.map((item, index) => {
                     let displaySrc = (item.ImageURL && item.ImageURL.length > 10) ? item.ImageURL : placeholderImg;
                     if (displaySrc.includes('cdn.shopify.com')) { displaySrc += displaySrc.includes('?') ? '&width=400' : '?width=400'; }
-                    
                     const promoText = item.Promotion || "";
+
+                    // ตรวจสอบราคา Step ต่างๆ ตามเงื่อนไขใหม่
+                    const hasStep2 = item.BulkPrice && item.BulkPrice !== '0' && item.BulkPrice !== '';
+                    const hasStep3 = item.BulkPrice2 && item.BulkPrice2 !== '0' && item.BulkPrice2 !== '';
+                    const hasStep4 = item.BulkPrice3 && item.BulkPrice3 !== '0' && item.BulkPrice3 !== '';
 
                     return `
                     <div class="bg-white rounded-[1.5rem] shadow-sm flex flex-col relative overflow-hidden card-hover border border-pink-50">
-                        ${promoText ? `<div onclick="showPromoPopup(${index}, window.filteredDataRef)" class="promo-badge">🔥 ${promoText}</div>` : ''}
+                        ${promoText ? `<div onclick="showPromoPopup(${index})" class="promo-badge">🔥 ${promoText}</div>` : ''}
                         <div class="img-container">
                             <img src="${displaySrc}" loading="lazy" onerror="handleImgError(this)" onload="handleImgLoad(this)" class="product-img ${displaySrc === placeholderImg ? 'is-placeholder' : ''}">
                             ${item.RetailPrice ? `<div class="retail-floating-badge"><span class="text-[8px] block text-gray-400 font-light -mb-1">แนะนำขาย</span><span class="text-xs md:text-sm font-bold text-pink-500 italic">฿${item.RetailPrice}</span></div>` : ''}
@@ -397,30 +382,44 @@
                             <h3 class="text-sm md:text-base font-medium text-gray-800 line-clamp-1 h-5 md:h-6 leading-tight">${item.ItemName}</h3>
                             <p class="text-[10px] text-gray-400 font-light line-clamp-2 h-7 md:h-8 mb-2 italic">${item.Description || '-'}</p>
                             
-                            <div class="bulk-badge p-2 md:p-3 rounded-[1.2rem] text-white mt-auto text-center flex flex-col gap-1.5">
-                                <div class="flex flex-col items-center">
+                            <div class="bulk-badge p-2 md:p-3 rounded-[1.2rem] text-white mt-auto text-center flex flex-col gap-1">
+                                <!-- Step 1 (ราคาปกติ WholesalePrice) -->
+                                <div class="flex flex-col items-center py-1">
                                     <span class="text-[8px] opacity-90 font-light leading-none mb-1 uppercase tracking-tighter">ราคาส่ง (ขั้นต่ำ ${item.MinWholesaleQty || '1'})</span>
                                     <div class="flex items-baseline gap-1">
                                         <span class="text-lg md:text-2xl font-bold">฿${item.WholesalePrice || '0'}</span>
                                         <span class="text-[8px]">/ ${item.WholesaleUnit || ''}</span>
                                     </div>
                                 </div>
-                                ${ (item.BulkPrice && item.BulkPrice !== '0' && item.BulkPrice !== item.WholesalePrice) ? `
-                                <div class="pt-1.5 border-t border-white/20 flex flex-col items-center">
-                                    <span class="text-[8px] font-light opacity-90 leading-none mb-1 italic tracking-tighter">Step 2: สั่ง ${item.BulkQty || '0'} ขึ้นไป</span>
-                                    <div class="flex items-baseline gap-1"><span class="text-sm md:text-xl font-bold">฿${item.BulkPrice}</span></div>
+                                
+                                <!-- Step 2 (BulkPrice / BulkQty) -->
+                                ${hasStep2 ? `
+                                <div class="border-t border-white/20 flex flex-col items-center bg-white/5 rounded-lg py-1 mt-0.5">
+                                    <span class="text-[8px] font-medium text-pink-100 leading-none mb-0.5 italic tracking-tighter">Step 2: สั่ง ${item.BulkQty || '0'}+ ชิ้น</span>
+                                    <div class="flex items-baseline gap-1">
+                                        <span class="text-sm md:text-lg font-bold text-white">฿${item.BulkPrice}</span>
+                                    </div>
                                 </div>` : ''}
-                                ${ (item.BulkPrice2 && item.BulkPrice2 !== '0') ? `
-                                <div class="pt-1.5 border-t border-white/10 flex flex-col items-center">
-                                    <span class="text-[8px] font-light opacity-90 leading-none mb-1 italic tracking-tighter">Step 3: สั่ง ${item.BulkQty2 || '0'} ขึ้นไป</span>
-                                    <div class="flex items-baseline gap-1"><span class="text-sm md:text-xl font-bold text-yellow-200">฿${item.BulkPrice2}</span></div>
+
+                                <!-- Step 3 (BulkPrice2 / BulkQty2) - ปรับสีให้แตกต่าง -->
+                                ${hasStep3 ? `
+                                <div class="border-t border-white/20 flex flex-col items-center bg-yellow-400/20 rounded-lg py-1 mt-0.5">
+                                    <span class="text-[8px] font-bold text-yellow-200 leading-none mb-0.5 italic tracking-tighter">Step 3: สั่ง ${item.BulkQty2 || '0'}+ ชิ้น</span>
+                                    <div class="flex items-baseline gap-1">
+                                        <span class="text-sm md:text-lg font-bold text-white">฿${item.BulkPrice2}</span>
+                                    </div>
                                 </div>` : ''}
-                                ${ (item.BulkPrice3 && item.BulkPrice3 !== '0') ? `
-                                <div class="pt-1.5 border-t border-white/10 flex flex-col items-center">
-                                    <span class="text-[8px] font-bold text-yellow-300 leading-none mb-1 italic tracking-tighter">VIP: สั่ง ${item.BulkQty3 || '0'} ขึ้นไป</span>
-                                    <div class="flex items-baseline gap-1"><span class="text-sm md:text-xl font-black text-yellow-300">฿${item.BulkPrice3}</span></div>
+
+                                <!-- Step 4 (BulkPrice3 / BulkQty3) - ปรับสีให้โดดเด่น -->
+                                ${hasStep4 ? `
+                                <div class="border-t border-white/20 flex flex-col items-center bg-green-400/30 rounded-lg py-1 mt-0.5 border-dashed">
+                                    <span class="text-[8px] font-black text-green-200 leading-none mb-0.5 italic tracking-tighter underline">Step 4: สั่ง ${item.BulkQty3 || '0'}+ ชิ้น</span>
+                                    <div class="flex items-baseline gap-1">
+                                        <span class="text-sm md:text-lg font-black text-white drop-shadow-sm">฿${item.BulkPrice3}</span>
+                                    </div>
                                 </div>` : ''}
-                                <button onclick="showOptionsByIndex(${index}, window.filteredDataRef)" class="w-full bg-white text-pink-500 mt-1.5 py-2.5 rounded-full text-[12px] font-bold shadow-sm active:scale-95 transition-transform">ดูตัวเลือกทั้งหมด</button>
+
+                                <button onclick="showOptionsByIndex(${index})" class="w-full bg-white text-pink-500 mt-2 py-2 rounded-full text-[11px] font-bold shadow-sm active:scale-95 transition-transform">ตัวเลือกอื่นๆ</button>
                             </div>
                         </div>
                     </div>`;
@@ -429,19 +428,13 @@
             }
         }
 
-        // New Promotion Popup Function
-        function showPromoPopup(idx, dataSource) {
-            const item = dataSource[idx];
+        // Promo Detail Logic
+        function showPromoPopup(idx) {
+            const item = window.filteredDataRef[idx];
             const modal = document.getElementById('promoModal');
-            const img = document.getElementById('promoModalImg');
-            const title = document.getElementById('promoModalTitle');
-            const desc = document.getElementById('promoModalDesc');
-
-            // ใช้ PromoImageURL ถ้ามี ถ้าไม่มีใช้รูปหลัก
-            img.src = item.PromoImageURL || item.ImageURL || placeholderImg;
-            title.textContent = item.ItemName;
-            desc.textContent = `โปรโมชั่น: ${item.Promotion}`;
-
+            document.getElementById('promoModalImg').src = item.PromoImageURL || item.ImageURL || placeholderImg;
+            document.getElementById('promoModalTitle').textContent = item.ItemName;
+            document.getElementById('promoModalDesc').textContent = `โปรโมชั่นพิเศษ: ${item.Promotion}`;
             modal.classList.remove('opacity-0', 'pointer-events-none');
             modal.querySelector('.modal-content').classList.replace('scale-90', 'scale-100');
             document.body.style.overflow = 'hidden';
@@ -454,16 +447,41 @@
             document.body.style.overflow = '';
         }
 
-        function showOptionsByIndex(idx, dataSource) {
-            const item = dataSource[idx];
+        // Shipping Modal Logic
+        function openShippingModal() {
+            const modal = document.getElementById('shippingModal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('.modal-content').classList.replace('scale-90', 'scale-100');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeShippingModal() {
+            const modal = document.getElementById('shippingModal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('.modal-content').classList.replace('scale-100', 'scale-90');
+            document.body.style.overflow = '';
+        }
+
+        // Product Options Logic
+        function showOptionsByIndex(idx) {
+            const item = window.filteredDataRef[idx];
             const modal = document.getElementById('optionsModal');
             const info = document.getElementById('modalProductInfo');
             const list = document.getElementById('optionsList');
             info.innerHTML = `<div class="w-16 h-16 rounded-xl bg-pink-50 overflow-hidden flex-shrink-0 relative"><img src="${item.ImageURL || placeholderImg}" class="product-img" style="opacity:1"></div><div class="flex-grow"><h4 class="font-medium text-gray-800 text-sm leading-tight">${item.ItemName}</h4><p class="text-pink-500 font-bold text-lg">เริ่มต้น ฿${item.WholesalePrice || '0'}</p></div>`;
             list.innerHTML = (item.allOptions || []).map(opt => { const parts = opt.split(':'); return `<div class="flex items-center justify-between p-3 bg-white border border-pink-100 rounded-2xl"><span class="text-gray-700 text-sm font-light">${parts[0]}</span><span class="text-pink-600 font-bold text-sm">฿${parts[1] || item.WholesalePrice}</span></div>`; }).join('');
-            modal.classList.remove('opacity-0', 'pointer-events-none'); modal.querySelector('.modal-content').classList.replace('scale-90', 'scale-100'); document.body.style.overflow = 'hidden';
+            modal.classList.remove('opacity-0', 'pointer-events-none'); 
+            modal.querySelector('.modal-content').classList.replace('scale-90', 'scale-100'); 
+            document.body.style.overflow = 'hidden';
         }
-        function closeModal() { const modal = document.getElementById('optionsModal'); modal.classList.add('opacity-0', 'pointer-events-none'); modal.querySelector('.modal-content').classList.replace('scale-100', 'scale-90'); document.body.style.overflow = ''; }
+        
+        function closeModal() { 
+            const modal = document.getElementById('optionsModal'); 
+            modal.classList.add('opacity-0', 'pointer-events-none'); 
+            modal.querySelector('.modal-content').classList.replace('scale-100', 'scale-90'); 
+            document.body.style.overflow = ''; 
+        }
+
         function filterCategory(cat) { currentCategory = cat; renderUI(); }
         document.getElementById('searchInput').addEventListener('input', updateGrid);
         window.onload = fetchData;
