@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ploypaw Pet Shop - Product Catalog</title>
+    <title>Ploypaw - Product Catalog</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -68,6 +68,7 @@
             z-index: 20;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             animation: pulse 2s infinite;
+            cursor: pointer; /* เพิ่มเพื่อให้รู้ว่าคลิกได้ */
         }
 
         @keyframes pulse {
@@ -89,20 +90,39 @@
             z-index: 10;
         }
 
+        /* ปรับปรุงความ Smooth ของ Search Container ในมือถือ */
+        #searchContainer {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform, padding, border-radius;
+        }
+
         #searchContainer.scrolled {
-            padding: 0.75rem 1.5rem;
-            max-width: 600px;
+            padding: 0.6rem 1rem;
+            max-width: 92%;
             margin-left: auto;
             margin-right: auto;
-            border-radius: 999px;
+            border-radius: 2rem;
             box-shadow: 0 15px 30px -5px rgba(249, 96, 150, 0.25);
             border-color: rgba(249, 96, 150, 0.3);
+            transform: translateY(10px);
+        }
+
+        @media (min-width: 768px) {
+            #searchContainer.scrolled {
+                max-width: 600px;
+                padding: 0.75rem 1.5rem;
+            }
         }
 
         @media (max-width: 768px) {
             #searchContainer.scrolled #categoryFilters,
             #searchContainer.scrolled #sortWrapper {
                 display: none;
+            }
+            #searchContainer.scrolled input {
+                padding-top: 0.6rem;
+                padding-bottom: 0.6rem;
+                font-size: 0.9rem;
             }
         }
 
@@ -141,8 +161,50 @@
                 <span class="text-xl md:text-2xl animate-bounce">🐾</span>
             </div>
         </div>
+         
+            <!-- Minimalistic Order Button -->
+            <div class="flex flex-col items-center justify-center gap-3">
+                <button onclick="openShippingModal()" class="group flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/40 px-4 py-1.5 rounded-full transition-all active:scale-95 shadow-sm">
+                    <span class="text-lg animate-pulse">📢</span>
+                    <span class="text-xs md:text-sm font-light text-pink-50 tracking-wide">
+                        ร้านค้าเปิดบิลขั้นต่ำ 5,000 บาท <span class="underline decoration-pink-200 underline-offset-4 ml-1 opacity-80 group-hover:opacity-100">คลิกเพื่อดูรายละเอียด</span>
+                    </span>
+                </button>
+            </div>
     </header>
-
+<!-- Shipping Conditions Modal -->
+    <div id="shippingModal" class="fixed inset-0 z-[70] flex items-center justify-center opacity-0 pointer-events-none modal-overlay bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white w-full max-w-sm rounded-[2.5rem] overflow-hidden shadow-2xl modal-content transform scale-90">
+            <div class="p-6 bg-gradient-to-br from-pink-500 to-rose-400 text-white text-center relative">
+                <h3 class="text-xl font-medium mb-1">เงื่อนไขการสั่งซื้อ</h3>
+                <p class="text-pink-100 text-xs font-light">สำหรับสมาชิกร้านค้า Ploypaw</p>
+                <button onclick="closeShippingModal()" class="absolute top-4 right-4 text-white/80 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-8 space-y-4">
+                <div class="flex gap-4">
+                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-pink-100 text-pink-500 text-xs flex items-center justify-center font-bold">1</span>
+                    <p class="text-sm text-gray-600 leading-relaxed">เปิดบิลขั้นต่ำ <span class="font-semibold text-pink-600">5,000 บาท</span> เฉพาะบิลแรกเท่านั้น</p>
+                </div>
+                <div class="flex gap-4">
+                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-pink-100 text-pink-500 text-xs flex items-center justify-center font-bold">2</span>
+                    <p class="text-sm text-gray-600 leading-relaxed">ราคาขายดังกล่าวมีผลเฉพาะ <span class="font-semibold text-gray-800">ร้านค้า</span> ไม่รวมถึงผู้บริโภคทั่วไป</p>
+                </div>
+                <div class="flex gap-4">
+                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-pink-100 text-pink-500 text-xs flex items-center justify-center font-bold">3</span>
+                    <div class="text-sm text-gray-600 leading-relaxed">
+                        ราคาสินค้ายังไม่รวมค่าจัดส่ง
+                        <p class="mt-2 p-3 bg-pink-50 rounded-2xl border border-pink-100 text-[13px]">
+                            📍 พื้นที่รัศมีไม่เกิน 30 กม. เมื่อซื้อครบ 15,000 บาทขึ้นไป <span class="text-green-600 font-bold italic text-sm">จัดส่งฟรี</span>
+                        </p>
+                    </div>
+                </div>
+                <button onclick="closeShippingModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-500 py-3 rounded-2xl text-sm font-medium transition-colors mt-4">
+                    รับทราบ
+                </button>
+            </div>
+        </div>
     <main class="max-w-7xl mx-auto px-4 md:px-6">
         <!-- Search & Category Bar -->
         <div id="searchContainer" class="glass sticky top-4 z-30 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-lg mb-8 flex flex-col gap-4 border border-pink-100">
@@ -179,13 +241,30 @@
 
     <!-- Modal Options -->
     <div id="optionsModal" class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none modal-overlay bg-black/60 p-4">
-        <div class="bg-white w-full max-w-md rounded-[2rem] overflow-hidden flex flex-col max-h-[80vh] shadow-2xl modal-content transform scale-90">
+        <div class="bg-white w-full max-w-md rounded-[2rem] overflow-hidden flex flex-col max-h-[85vh] shadow-2xl modal-content transform scale-90">
             <div class="p-6 bg-pink-500 text-white flex justify-between items-center">
-                <h2 class="text-xl font-medium">ตัวเลือก/รสชาติสินค้า</h2>
+                <h2 id="modalTitle" class="text-xl font-medium">ตัวเลือก/รสชาติสินค้า</h2>
                 <button onclick="closeModal()" class="text-white hover:rotate-90 transition-transform"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
             <div id="modalProductInfo" class="p-4 border-b border-gray-100 flex items-center gap-4"></div>
             <div id="optionsList" class="flex-grow overflow-y-auto p-6 grid grid-cols-1 gap-2 no-scrollbar"></div>
+        </div>
+    </div>
+
+    <!-- Promo Modal (New) -->
+    <div id="promoModal" class="fixed inset-0 z-[60] flex items-center justify-center opacity-0 pointer-events-none modal-overlay bg-black/70 p-4">
+        <div class="bg-white w-full max-w-lg rounded-[2.5rem] overflow-hidden flex flex-col max-h-[90vh] shadow-2xl modal-content transform scale-90">
+            <div class="relative w-full aspect-square bg-pink-50">
+                <img id="promoModalImg" src="" class="w-full h-full object-contain">
+                <button onclick="closePromoModal()" class="absolute top-4 right-4 bg-white/80 backdrop-blur text-pink-500 rounded-full p-2 shadow-lg hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-8 text-center bg-white">
+                <div class="inline-block px-4 py-1 bg-red-500 text-white rounded-full text-xs font-bold mb-3 animate-bounce">PROMOTION</div>
+                <h2 id="promoModalTitle" class="text-2xl font-bold text-gray-800 mb-2"></h2>
+                <p id="promoModalDesc" class="text-pink-500 text-lg font-medium"></p>
+            </div>
         </div>
     </div>
 
@@ -201,8 +280,19 @@
             const searchContainer = document.getElementById('searchContainer');
             const header = document.getElementById('mainHeader');
             const backToTop = document.getElementById('backToTop');
-            if (window.scrollY > 300) { backToTop.classList.add('visible'); } else { backToTop.classList.remove('visible'); }
-            if (window.scrollY > header.offsetHeight - 50) { searchContainer.classList.add('scrolled'); } else { searchContainer.classList.remove('scrolled'); }
+            
+            if (window.scrollY > 300) { 
+                backToTop.classList.add('visible'); 
+            } else { 
+                backToTop.classList.remove('visible'); 
+            }
+            
+            // ปรับ logic ให้ทำงาน smooth ขึ้น
+            if (window.scrollY > header.offsetHeight - 20) { 
+                if(!searchContainer.classList.contains('scrolled')) searchContainer.classList.add('scrolled'); 
+            } else { 
+                if(searchContainer.classList.contains('scrolled')) searchContainer.classList.remove('scrolled'); 
+            }
         });
 
         async function fetchData() {
@@ -233,7 +323,21 @@
             }
             return result;
         }
+        // Shipping Modal Logic
+        function openShippingModal() {
+            const modal = document.getElementById('shippingModal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('.modal-content').classList.replace('scale-90', 'scale-100');
+            document.body.style.overflow = 'hidden';
+        }
 
+        function closeShippingModal() {
+            const modal = document.getElementById('shippingModal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('.modal-content').classList.replace('scale-100', 'scale-90');
+            document.body.style.overflow = '';
+        }
+        
         function processGroupedData() {
             const groups = {};
             rawProducts.forEach(item => {
@@ -279,12 +383,11 @@
                     let displaySrc = (item.ImageURL && item.ImageURL.length > 10) ? item.ImageURL : placeholderImg;
                     if (displaySrc.includes('cdn.shopify.com')) { displaySrc += displaySrc.includes('?') ? '&width=400' : '?width=400'; }
                     
-                    // ตรวจสอบสถานะโปรโมชั่น
                     const promoText = item.Promotion || "";
 
                     return `
                     <div class="bg-white rounded-[1.5rem] shadow-sm flex flex-col relative overflow-hidden card-hover border border-pink-50">
-                        ${promoText ? `<div class="promo-badge">🔥 ${promoText}</div>` : ''}
+                        ${promoText ? `<div onclick="showPromoPopup(${index}, window.filteredDataRef)" class="promo-badge">🔥 ${promoText}</div>` : ''}
                         <div class="img-container">
                             <img src="${displaySrc}" loading="lazy" onerror="handleImgError(this)" onload="handleImgLoad(this)" class="product-img ${displaySrc === placeholderImg ? 'is-placeholder' : ''}">
                             ${item.RetailPrice ? `<div class="retail-floating-badge"><span class="text-[8px] block text-gray-400 font-light -mb-1">แนะนำขาย</span><span class="text-xs md:text-sm font-bold text-pink-500 italic">฿${item.RetailPrice}</span></div>` : ''}
@@ -317,13 +420,38 @@
                                     <span class="text-[8px] font-bold text-yellow-300 leading-none mb-1 italic tracking-tighter">VIP: สั่ง ${item.BulkQty3 || '0'} ขึ้นไป</span>
                                     <div class="flex items-baseline gap-1"><span class="text-sm md:text-xl font-black text-yellow-300">฿${item.BulkPrice3}</span></div>
                                 </div>` : ''}
-                                <button onclick="showOptionsByIndex(${index}, filteredDataRef)" class="w-full bg-white text-pink-500 mt-1 py-1.5 rounded-full text-[10px] font-bold shadow-sm active:scale-95 transition-transform">ดูตัวเลือก</button>
+                                <button onclick="showOptionsByIndex(${index}, window.filteredDataRef)" class="w-full bg-white text-pink-500 mt-1.5 py-2.5 rounded-full text-[12px] font-bold shadow-sm active:scale-95 transition-transform">ดูตัวเลือกทั้งหมด</button>
                             </div>
                         </div>
                     </div>`;
                 }).join('');
                 window.filteredDataRef = filtered;
             }
+        }
+
+        // New Promotion Popup Function
+        function showPromoPopup(idx, dataSource) {
+            const item = dataSource[idx];
+            const modal = document.getElementById('promoModal');
+            const img = document.getElementById('promoModalImg');
+            const title = document.getElementById('promoModalTitle');
+            const desc = document.getElementById('promoModalDesc');
+
+            // ใช้ PromoImageURL ถ้ามี ถ้าไม่มีใช้รูปหลัก
+            img.src = item.PromoImageURL || item.ImageURL || placeholderImg;
+            title.textContent = item.ItemName;
+            desc.textContent = `โปรโมชั่น: ${item.Promotion}`;
+
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('.modal-content').classList.replace('scale-90', 'scale-100');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePromoModal() {
+            const modal = document.getElementById('promoModal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('.modal-content').classList.replace('scale-100', 'scale-90');
+            document.body.style.overflow = '';
         }
 
         function showOptionsByIndex(idx, dataSource) {
